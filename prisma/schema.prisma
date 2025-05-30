@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id          String   @id @default(cuid())
+  name        String
+  hostId      String
+  code        String   @unique
+  isActive    Boolean  @default(true)
+  maxPlayers  Int      @default(4)
+  words       String   // JSON string of bingo words
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  players     Player[]
+  calledWords CalledWord[]
+  
+  @@map("games")
+}
+
+model Player {
+  id        String   @id @default(cuid())
+  name      String
+  gameId    String
+  isHost    Boolean  @default(false)
+  board     String   // JSON string of player's bingo board
+  markedCells String @default("[]") // JSON string of marked cell positions
+  isWinner  Boolean  @default(false)
+  joinedAt  DateTime @default(now())
+  
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  
+  @@map("players")
+}
+
+model CalledWord {
+  id        String   @id @default(cuid())
+  gameId    String
+  word      String
+  calledAt  DateTime @default(now())
+  calledBy  String   // player id who called the word
+  
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  
+  @@map("called_words")
+}
