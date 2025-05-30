@@ -1,5 +1,7 @@
 # Bingo
 
+> This a sample vibe-coding project of a bingo game using Remix, TypeScript, and Prisma.
+
 `Bingo` is a online bingo game that allows you to play with your friends. It is built using Remix and TypeScript, and uses Prisma for database management.
 
 ## Features
